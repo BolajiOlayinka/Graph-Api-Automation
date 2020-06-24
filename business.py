@@ -4,6 +4,7 @@ from facebook_business.adobjects.adaccount import AdAccount
 from facebook_business.adobjects.adset import AdSet
 import csv 
 from matplotlib import pyplot as plt 
+import json
 
 
 
@@ -20,6 +21,7 @@ params = {
     
 }
 fields = [
+    'campaign_id',
     'campaign_name',
     'impressions',
     'spend',
@@ -38,25 +40,48 @@ for my_campaigns in campaigns:
     result.append(my_campaigns)
     # print(result)
       
+print(result)
 
-
-with open('data.csv', 'a') as csv_file:
-    csv_writer = csv.writer(csv_file, delimiter=' ')
+with open('data.csv', 'w') as csv_file:
+    csv_writer = csv.writer(csv_file)
     csv_writer.writerow(result)
 
-# print(result)
+# with open("data.txt", "w") as txt_file:
+#     for line in result:
+#         txt_file.write(line)
 
+
+    
+# with open('data.txt', 'w') as outfile:
+#     json.dump(result, outfile )
+
+
+# with open("data.txt","w") as outfile:
+#     outfile.write(result)
+
+
+# print(result)
 x=[]
 for items in result:
       x.append(items['campaign_name'])
-print(x)
+
 y=[]
 for items in result:
       y.append(items['calc_cpc'])
 
-plt.scatter(x,y)
-plt.show()
-print(y)
+# for i in range(len(result)):
+#     plt.figure()
+#     plt.scatter(x[i],y[i])
+    # plt.show()
+
+
+
+
+
+
+# plt.scatter(x,y)
+# plt.show()
+# print(y)
 
 
 # for i in x:
