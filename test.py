@@ -5,6 +5,8 @@ from facebook_business.adobjects.adset import AdSet
 import csv 
 from matplotlib import pyplot as plt 
 import json
+import os
+
 
 
 
@@ -34,28 +36,41 @@ campaigns = my_account.get_insights(
   params=params)
 # print(campaigns)
 
-result=[]
+try:
+    filer = open("data.json", 'r')
+    result = json.load(filer)
+except FileNotFoundError:
+    result=[]
+
 weekly_data = []
 for my_campaigns in campaigns:
+    
+    # name  = my_campaigns['campaign_name'].split("_")[0].lower()
+    name  = " ".join(my_campaigns['campaign_name'].split()[:2])
+    
     campaign = {}
 
+
     try:
-        campaign['calc_cpc'] = int(float(my_campaigns['spend'])) / int(float(my_campaigns['actions'][0]['value']))
+        value = [ i.get("value")  for i in my_campaigns['actions'] if i.get("action_type") == "landing_page_view" ][0]
+        campaign['calc_cpc'] = int(float(my_campaigns['spend'])) / int(float(value))
         campaign['impressions'] = my_campaigns['impressions']
-        campaign['impressions'] = my_campaigns['impressions']
-        campaign['impressions'] = my_campaigns['impressions']
-        campaign['impressions'] = my_campaigns['impressions']
-        campaign['impressions'] = my_campaigns['impressions']
+        campaign['campaign_id'] = my_campaigns['campaign_id']
+        campaign['campaign_name'] = my_campaigns['campaign_name']
+        campaign['spend'] = my_campaigns['spend']
+        campaign['landing_page_view'] = value
+        # campaign['action'] = my_campaigns['action']
         
-        my_campaigns.update( )
-        result.append(my_campaigns)
+        weekly_data.append({name:campaign})
+
     except Exception as e:
         print(e)
     # print(result)
+result.append(weekly_data)
 
 
-with open('data.json', 'a') as json_file:
-    json.dump(json_file, result)
+with open('data.json', 'w') as json_file:
+    json.dump(result, json_file)
 
 # data_read=[]
 # with open('data.csv') as csv_file:
@@ -92,18 +107,55 @@ with open('data.json', 'a') as json_file:
 
 # print(result[0])
 
-x=[]
-for items in result:
-      x.append(items['campaign_name'])
+# x=[]
+# for items in result:
+#       x.append(items['campaign_name'])
 
-y=[]
-for items in result:
-      y.append(items['calc_cpc'])
+# y=[]
+# for items in result:
+#       y.append(items['calc_cpc'])
 
 # for i in range(len(result)):
 #     plt.figure()
 #     plt.scatter(x[i],y[i])
 #     plt.shw()
+
+current_products = [list(i.keys())[0] for i in weekly_data]
+
+plot_data = {}
+for week in result:
+    for item in week:
+      
+        item_name = list(item.keys())[0]
+        
+        if item_name in current_products:
+            if item_name in plot_data:
+
+                plot_data[item_name].append(item[item_name].get("calc_cpc"))
+            else:
+                value = [item[item_name].get("calc_cpc")]
+                plot_data[item_name] = value
+
+
+
+
+plt.figure(len(current_products))
+folder = os.mkdir(f"plots/week_{len(result)}")
+for i in current_products:
+    plt.figure(current_products.index(i))
+    count = 1
+    week = []
+    for j in plot_data[i]:
+        
+        # plt.scatter(f"{i}_{count}",j)
+        week.append(f"{i}_{count}")
+        count += 1
+        
+
+    plt.scatter(week,plot_data[i]) 
+    plt.savefig(f"plots/week_{len(result)}/{i}_{count}.png")
+
+
 
 
 
