@@ -35,25 +35,33 @@ campaigns = my_account.get_insights(
 # print(campaigns)
 
 result=[]
+weekly_data = []
 for my_campaigns in campaigns:
-    print(my_campaigns)
+    campaign = {}
+
     try:
-        my_campaigns.update({'calc_cpc' : int(float(my_campaigns['spend'])) / int(float(my_campaigns['actions'][0]['value'])) } )
+        campaign['calc_cpc'] = int(float(my_campaigns['spend'])) / int(float(my_campaigns['actions'][0]['value']))
+        campaign['impressions'] = my_campaigns['impressions']
+        campaign['impressions'] = my_campaigns['impressions']
+        campaign['impressions'] = my_campaigns['impressions']
+        campaign['impressions'] = my_campaigns['impressions']
+        campaign['impressions'] = my_campaigns['impressions']
+        
+        my_campaigns.update( )
         result.append(my_campaigns)
     except Exception as e:
         print(e)
     # print(result)
 
 
-with open('data.csv', 'a') as csv_file:
-    csv_writer = csv.writer(csv_file)
-    csv_writer.writerow(result)
+with open('data.json', 'a') as json_file:
+    json.dump(json_file, result)
 
-data_read=[]
-with open('data.csv') as csv_file:
-    csv_reader = csv.reader(csv_file)
-    for read in csv_reader:
-        data_read.append(read)
+# data_read=[]
+# with open('data.csv') as csv_file:
+#     csv_reader = csv.reader(csv_file)
+#     for read in csv_reader:
+#         data_read.append(read)
 
 
 # print(len(data_read[2]))

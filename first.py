@@ -1,5 +1,5 @@
 
-# import json
+import json
 # import facebook
 
 # graph=facebook.GraphAPI(access_token='EAAD9mIfgmCwBAK3UHDOAW1zvAcF5Wqjq5WCq8Q1wEHpkz5TG2F0GJXqTBtUYweeuOtiP3LbyafjWyAb6A02sZCTMAEJ1uZCMYKh3y0SMkulsCHnvij3WCuZCIdJanZC8P2wf0ky5DlL2U6ZBX0vjUKROZBDe0AvZCaZCoU77DON2jqV1neZCo9EQP9karPi4PgWGFPvWbi0qGqPuxZAcbCs8KPOs1zIMeFBdQDuFXiHDlxyAZDZD')
@@ -16,7 +16,17 @@
 dict_list=[
   [
       {
-          "name":"AAAAA",
+      "name":"AAAAA",
+      "age":"12",
+      "class":"box"
+      },
+      {
+      "name":"AAAAA",
+      "age":"12",
+      "class":"box"
+      },
+      {
+      "name":"AAAAA",
       "age":"12",
       "class":"box"
       }
@@ -25,13 +35,34 @@ dict_list=[
       {
           "name":"DDDD",
       "age":"10",
-      "class":"parce"}
+      "class":"parce"
+      },
+      {
+          "name":"AAAAA",
+      "age":"12",
+      "class":"box"
+      },
+      {
+          "name":"AAAAA",
+      "age":"12",
+      "class":"box"
+      }
   ],
   [
       {
           "name":"BBBB",
        "age":"16",
       "class":"cage"
+      },
+      {
+          "name":"AAAAA",
+      "age":"12",
+      "class":"box"
+      },
+      {
+          "name":"AAAAA",
+      "age":"12",
+      "class":"box"
       }
   ],
   [
@@ -39,6 +70,16 @@ dict_list=[
           "name":"EEEE",
       "age":"12",
       "class":"sage"
+      },
+      {
+          "name":"AAAAA",
+      "age":"12",
+      "class":"box"
+      },
+      {
+          "name":"AAAAA",
+      "age":"12",
+      "class":"box"
       }
   ],
 
@@ -50,8 +91,9 @@ for l in dict_list:
     temp_dict = l[0]
     age_list.append(temp_dict["age"])
 print(age_list)
+c=json.dumps(l)
 # get set of duplicates in age list
-dup_ages = set([x for x in l if l.count(x) > 1])
+dup_ages = set([x for x in c if c.count(x) > 1])
 print(dup_ages)
 for index, age in enumerate(age_list):
     for dup_age in dup_ages:            # do something for a given duplicate age
@@ -59,7 +101,59 @@ for index, age in enumerate(age_list):
             print('Hello')
 
 
-
+# [
+#     [
+#         {
+#             "id":"8uih8o9",
+#             "name":"ggeujd",
+#             "city":"lag lag"
+#         }
+#         {
+#             "id":"8uih8o9",
+#             "name":"ggeujd",
+#             "city":"lag lag"
+#         }
+#         {
+#             "id":"8uih8o9",
+#             "name":"ggeujd",
+#             "city":"lag lag"
+#         }
+#     ]
+#     [
+#         {
+#             "id":"8uih8o9",
+#             "name":"ggeujd",
+#             "city":"lag lag"
+#         }
+#         {
+#             "id":"90h8o9",
+#             "name""mbjgeujd",
+#             "city":"lag lag"
+#         }
+#         {
+#             "id":"0u008o9",
+#             "name":"poieujd",
+#             "city":"lag lag"
+#         }
+#     ],
+#     [
+#         {
+#             "id":"898990o9",
+#             "name":"jjjsiujd",
+#             "city":"lag lag"
+#         }
+#         {
+#             "id":"8uih8o9",
+#             "name":"ggeujd",
+#             "city":"lag lag"
+#         }
+#         {
+#             "id":"8uih8o9",
+#             "name":"qwerjd",
+#             "city":"lag lag"
+#         }
+#     ]
+# ]
 
 
 
