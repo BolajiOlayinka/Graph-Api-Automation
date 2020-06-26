@@ -1,14 +1,63 @@
 
-import json
-import facebook
+# import json
+# import facebook
 
-graph=facebook.GraphAPI(access_token='EAAD9mIfgmCwBAK3UHDOAW1zvAcF5Wqjq5WCq8Q1wEHpkz5TG2F0GJXqTBtUYweeuOtiP3LbyafjWyAb6A02sZCTMAEJ1uZCMYKh3y0SMkulsCHnvij3WCuZCIdJanZC8P2wf0ky5DlL2U6ZBX0vjUKROZBDe0AvZCaZCoU77DON2jqV1neZCo9EQP9karPi4PgWGFPvWbi0qGqPuxZAcbCs8KPOs1zIMeFBdQDuFXiHDlxyAZDZD')
-fields=['email, birthday,posts']
-f_book=graph.get_object('me', fields=fields)
+# graph=facebook.GraphAPI(access_token='EAAD9mIfgmCwBAK3UHDOAW1zvAcF5Wqjq5WCq8Q1wEHpkz5TG2F0GJXqTBtUYweeuOtiP3LbyafjWyAb6A02sZCTMAEJ1uZCMYKh3y0SMkulsCHnvij3WCuZCIdJanZC8P2wf0ky5DlL2U6ZBX0vjUKROZBDe0AvZCaZCoU77DON2jqV1neZCo9EQP9karPi4PgWGFPvWbi0qGqPuxZAcbCs8KPOs1zIMeFBdQDuFXiHDlxyAZDZD')
+# fields=['email, birthday,posts']
+# f_book=graph.get_object('me', fields=fields)
 
-# print(json.dumps(f_book, indent=4))
-with open('data.txt', 'w') as outfile:
-    json.dump(f_book, outfile )
+# # print(json.dumps(f_book, indent=4))
+# with open('data.txt', 'w') as outfile:
+#     json.dump(f_book, outfile )
+
+
+
+
+dict_list=[
+  [
+      {
+          "name":"AAAAA",
+      "age":"12",
+      "class":"box"
+      }
+  ],
+  [
+      {
+          "name":"DDDD",
+      "age":"10",
+      "class":"parce"}
+  ],
+  [
+      {
+          "name":"BBBB",
+       "age":"16",
+      "class":"cage"
+      }
+  ],
+  [
+      {
+          "name":"EEEE",
+      "age":"12",
+      "class":"sage"
+      }
+  ],
+
+]
+
+
+age_list = [] 
+for l in dict_list:
+    temp_dict = l[0]
+    age_list.append(temp_dict["age"])
+print(age_list)
+# get set of duplicates in age list
+dup_ages = set([x for x in l if l.count(x) > 1])
+print(dup_ages)
+for index, age in enumerate(age_list):
+    for dup_age in dup_ages:            # do something for a given duplicate age
+        if dup_age == age:
+            print('Hello')
+
 
 
 
@@ -32,3 +81,19 @@ with open('data.txt', 'w') as outfile:
 
 # if __name__=="__main__":
 #        main()
+
+
+
+# age_list = [] 
+
+# for l in dict_list:
+#     temp_dict = l[0]
+#     age_list.append(temp_dict["age"])
+
+# # get set of duplicates in age list
+# dup_ages = set([x for x in l if l.count(x) > 1])
+
+# for index, age in enumerate(age_list):
+#     for dup_age in dup_ages:            # do something for a given duplicate age
+#         if dup_age == age:
+#             dict_list[index]   

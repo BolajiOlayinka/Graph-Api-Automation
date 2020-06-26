@@ -39,13 +39,19 @@ for my_campaigns in campaigns:
     my_campaigns.update({'calc_cpc' : int(float(my_campaigns['spend'])) / int(float(my_campaigns['actions'][0]['value'])) } )
     result.append(my_campaigns)
     # print(result)
-      
-print(result)
 
-with open('data.csv', 'w') as csv_file:
+
+with open('data.csv', 'a') as csv_file:
     csv_writer = csv.writer(csv_file)
     csv_writer.writerow(result)
 
+data_read=[]
+with open('data.csv') as csv_file:
+    csv_reader = csv.reader(csv_file)
+    for read in csv_reader:
+        data_read.append(read)
+
+print(data_read)
 # with open("data.txt", "w") as txt_file:
 #     for line in result:
 #         txt_file.write(line)
@@ -60,7 +66,8 @@ with open('data.csv', 'w') as csv_file:
 #     outfile.write(result)
 
 
-# print(result)
+# print(result[0])
+
 x=[]
 for items in result:
       x.append(items['campaign_name'])
@@ -72,7 +79,7 @@ for items in result:
 # for i in range(len(result)):
 #     plt.figure()
 #     plt.scatter(x[i],y[i])
-    # plt.show()
+#     plt.show()
 
 
 
