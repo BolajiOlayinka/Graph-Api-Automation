@@ -72,53 +72,6 @@ result.append(weekly_data)
 with open('data.json', 'w') as json_file:
     json.dump(result, json_file)
 
-# data_read=[]
-# with open('data.csv') as csv_file:
-#     csv_reader = csv.reader(csv_file)
-#     for read in csv_reader:
-#         data_read.append(read)
-
-
-# print(len(data_read[2]))
-# print(data_read[0])
-# for data in data_read:
-#     print(data[1])
-
-# data_list = [] 
-# for l in data_read:
-#     temp_data = l[0]
-#     data_list.append(temp_data)
-
-# print (data_list)
-# print(age_list)
-# with open("data.txt", "w") as txt_file:
-#     for line in result:
-#         txt_file.write(line)
-
-
-    
-# with open('data.txt', 'w') as outfile:
-#     json.dump(result, outfile )
-
-
-# with open("data.txt","w") as outfile:
-#     outfile.write(result)
-
-
-# print(result[0])
-
-# x=[]
-# for items in result:
-#       x.append(items['campaign_name'])
-
-# y=[]
-# for items in result:
-#       y.append(items['calc_cpc'])
-
-# for i in range(len(result)):
-#     plt.figure()
-#     plt.scatter(x[i],y[i])
-#     plt.shw()
 
 current_products = [list(i.keys())[0] for i in weekly_data]
 
@@ -147,31 +100,11 @@ for i in current_products:
     week = []
     for j in plot_data[i]:
         
-        # plt.scatter(f"{i}_{count}",j)
         week.append(f"{i}_{count}")
         count += 1
         
 
     plt.scatter(week,plot_data[i]) 
     plt.savefig(f"plots/week_{len(result)}/{i}_{count}.png")
-
-
-
-
-
-
-
-
-# plt.scatter(x,y)
-# plt.show()
-# print(y)
-
-
-# for i in x:
-#       for j in y:
-#            print(i)
-#            print(j)
-#            plt.plot(i,j)
-#            plt.show()
 
 
