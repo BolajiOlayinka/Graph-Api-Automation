@@ -102,9 +102,16 @@ for i in current_products:
         
         week.append(f"{i}_{count}")
         count += 1
-        
+        2
 
     plt.scatter(week,plot_data[i]) 
     plt.savefig(f"plots/week_{len(result)}/{i}_{count}.png")
+
+
+
+for data in weekly_data:
+    product_name = list(data)[0] + '.json'
+    with open(product_name, 'a',  newline='\n') as file:
+        json.dump(data, file)
 
 
