@@ -6,13 +6,14 @@ import csv
 from matplotlib import pyplot as plt 
 import json
 import os
+plt.rcParams.update({'figure.max_open_warning': 0})
 
 
 
 
-my_app_id = '633953947466193'
-my_app_secret = '2d471ec8a8a4f412cf2d3bec9ef6ee64'
-my_access_token = 'EAAJAkZBfXudEBABsZCVT1flnVOVDZBsHfoeUje3uIhhca38hxGfajvLi9ESsuJTZAzNMtjWWXJ8JCE2tjK9HGzYyfcU8DVmcAJyE4rZCG2aa3KXt82rxRQdTnehyb7RR15zGcm7OwN9QMHQj31RLPF9oJTDZAeblFnYlXStziapSp5xw2KI4N0'
+my_app_id = '2725706687661342'
+my_app_secret = '259338521f39f49cacef7db0aae1ae5d'
+my_access_token = 'EAAmvBArhRR4BADniGjZCgCluOLCRF7TolKU5UriWVmrBH6OUlBypAQgnx0nyPf2wimk3R4bRRQuuLzCbsR82a3DWtYnFMp8ndYTJbdLZBZBHgQQesfC1WjPYeLAYc4T4WoLZBL70olMwpOZBtH7gU7DWclHfDa2xGaMDZAhFOlw4D1SQZCl43F0'
 FacebookAdsApi.init(my_app_id, my_app_secret, my_access_token)
 my_account = AdAccount('act_2408768415887341')
 
@@ -45,8 +46,8 @@ except FileNotFoundError:
 weekly_data = []
 for my_campaigns in campaigns:
     
-    # name  = my_campaigns['campaign_name'].split("_")[0].lower()
-    name  = " ".join(my_campaigns['campaign_name'].split()[:2])
+    name  = my_campaigns['campaign_name'].split("@")[0].lower()
+    # name  = " ".join(my_campaigns['campaign_name'].split()[:2])
     
     campaign = {}
 
@@ -69,9 +70,10 @@ for my_campaigns in campaigns:
 result.append(weekly_data)
 
 
+# with open('data.json', 'w') as json_file:
+#     json.dump(result, json_file)
 with open('data.json', 'w') as json_file:
-    json.dump(result, json_file)
-
+    json_file.write(json.dumps(result, indent=4))
 
 current_products = [list(i.keys())[0] for i in weekly_data]
 
@@ -107,11 +109,13 @@ for i in current_products:
     plt.scatter(week,plot_data[i]) 
     plt.savefig(f"plots/week_{len(result)}/{i}_{count}.png")
 
-
-
 for data in weekly_data:
     product_name = list(data)[0] + '.json'
-    with open(product_name, 'a',  newline='\n') as file:
-        json.dump(data, file)
+    with open(product_name, mode='a') as json_file:
+        json_file.write(json.dumps(data, indent=4))
 
+# for data in weekly_data:
+#     product_name = list(data)[0] + '.json'
+#     with open(product_name, 'a',  delimeter=',') as file:
+#         json.dump(data, file)
 
