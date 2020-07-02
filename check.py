@@ -51,13 +51,16 @@ for my_campaigns in campaigns:
     campaign = {}
     try:
         value = [ i.get("value")  for i in my_campaigns['actions'] if i.get("action_type") == "landing_page_view" ][0]
-        campaign['calc_cpc'] = int(float(my_campaigns['spend'])) / int(float(value))
+        campaign['calc_cpc'] = round(int(float(my_campaigns['spend'])) / int(float(value)),2)
         campaign['impressions'] = my_campaigns['impressions']
+        campaign['name'] = my_campaigns['name']
+        campaign['impressions'] = my_campaigns['orders']
         campaign['campaign_id'] = my_campaigns['campaign_id']
         campaign['campaign_name'] = my_campaigns['campaign_name']
         campaign['spend'] = my_campaigns['spend']
         campaign['landing_page_view'] = value
         campaign['current_time'] = time
+        campaign['calc_ctr'] = round(int(float(value))/int(float(my_campaigns['impressions'])),4)
         # campaign['action'] = my_campaigns['action']
         weekly_data.append(campaign)
     except Exception as e:
@@ -68,14 +71,12 @@ week_data=[]
 reading_data=[]
 
 for week in weekly_data:
-    # print(week)
     product_name=((week)['campaign_name']) + '.csv'
-    print(product_name) 
-    fileEmpty = os.stat(product_name).st_size == 0
     with open(product_name, 'a', newline='') as f:
         fields=list(week.keys())
         #print(fields)
         output=csv.DictWriter(f, fieldnames=fields) 
+        fileEmpty = os.stat(product_name).st_size == 0
         if fileEmpty:
             output.writeheader()
         output.writerow(week)
@@ -83,16 +84,15 @@ for week in weekly_data:
     with open(product_name, newline='') as read_csv:
         user_reader=csv.DictReader(read_csv)
         user_reader_list=(list(user_reader))
-        week_axis=[]
+        # week_axis=[]
         cpc_axis=[]
         ctr_axis=[]
         count = 0
         for item in user_reader_list:
-            print(item)
             cpc_axis.append(item['calc_cpc'])
             result_fb = float(item['landing_page_view'])
             impression_fb = float(item['impressions'])
-            week_axis.append(item['current_time'])
+            # week_axis.append(item['current_time'])
             count+=1
             #print(result_fb)
             #print(impreesion_fb)
@@ -101,22 +101,34 @@ for week in weekly_data:
         folder = os.mkdir(f"figures/week_{len(cpc_axis)}cpc")
         # week_axis = range(len(cpc_axis))
         plt.figure()
-        plt.scatter(week_axis, cpc_axis)
-        plt.savefig(f"figures/week_{len(cpc_axis)}cpc/{count}.png")
-        folder = os.mkdir(f"figures/week_{len(cpc_axis)}ctr")
-        plt.figure()
-        plt.scatter(week_axis, ctr_axis)
-        plt.savefig(f"figures/week_{len(cpc_axis)}ctr/{count}.png")
-        
+        plt.subplot(221)
+        plt.plot(cpc_axis)
+        plt.title('Cpc')
+        plt.grid(True)    
+        plt.subplot(222)
+        plt.plot(ctr_axis)
+        plt.title('Ctr')
+        plt.grid(True)
+        plt.subplot(223)
+        plt.plot(ctr_axis)
+        plt.title('Purchase Rate')
+        plt.grid(True)
+        plt.subplot(224)
+        plt.plot(cpc_axis)
+        plt.title('Capital Roi')
+        plt.grid(True)
+
+        plt.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=0.25,wspace=0.35)
+        plt.show()
     
     break
+
 
 """
 x=[]
 for items in reading_data:
     x.append(items['campaign_name'])
 print(x)
-
 # y=[]
 # for items in user_reader_list:
 # y.append(items['calc_cpc'])
