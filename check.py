@@ -7,6 +7,9 @@ from matplotlib import pyplot as plt
 import json
 import os
 plt.rcParams.update({'figure.max_open_warning': 0})
+import calendar
+import time
+
 
 
 my_app_id = '2725706687661342'
@@ -27,6 +30,8 @@ fields = [
     'impressions',
     'spend',
     'impressions',
+    'date_start',
+    'date_stop',
     'actions'
 ]
 
@@ -34,6 +39,9 @@ campaigns = my_account.get_insights(
   fields=fields,
   params=params)
 # print(campaigns)
+
+ts = calendar.timegm(time.gmtime())
+time = time.ctime(ts)
 
 
 weekly_data = []
@@ -43,52 +51,55 @@ for my_campaigns in campaigns:
     campaign = {}
     try:
         value = [ i.get("value")  for i in my_campaigns['actions'] if i.get("action_type") == "landing_page_view" ][0]
-        campaign['campaign_name'] = my_campaigns['campaign_name'].split("@")[0].lower()
         campaign['calc_cpc'] = int(float(my_campaigns['spend'])) / int(float(value))
         campaign['impressions'] = my_campaigns['impressions']
         campaign['campaign_id'] = my_campaigns['campaign_id']
+        campaign['campaign_name'] = my_campaigns['campaign_name']
         campaign['spend'] = my_campaigns['spend']
         campaign['landing_page_view'] = value
+        campaign['current_time'] = time
         # campaign['action'] = my_campaigns['action']
         weekly_data.append(campaign)
     except Exception as e:
         print(e)
     # print(result)
 # print(weekly_data)
-# print(weekly_data)
 week_data=[]
 reading_data=[]
+
 for week in weekly_data:
     # print(week)
     product_name=((week)['campaign_name']) + '.csv'
     print(product_name) 
+    fileEmpty = os.stat(product_name).st_size == 0
     with open(product_name, 'a', newline='') as f:
         fields=list(week.keys())
-        
         #print(fields)
         output=csv.DictWriter(f, fieldnames=fields) 
-        #output.writeheader()
+        if fileEmpty:
+            output.writeheader()
         output.writerow(week)
         #break
     with open(product_name, newline='') as read_csv:
-        #user_reader=csv.DictReader(read_csv, delimiter=" ")
         user_reader=csv.DictReader(read_csv)
         user_reader_list=(list(user_reader))
-        #print(user_reader_list)
-        week_axis = []
-        cpc_axis = []
-        ctr_axis = []
+        week_axis=[]
+        cpc_axis=[]
+        ctr_axis=[]
         count = 0
         for item in user_reader_list:
+            print(item)
             cpc_axis.append(item['calc_cpc'])
             result_fb = float(item['landing_page_view'])
             impression_fb = float(item['impressions'])
+            week_axis.append(item['current_time'])
             count+=1
             #print(result_fb)
             #print(impreesion_fb)
             ctr_axis.append(result_fb/impression_fb)
+        
         folder = os.mkdir(f"figures/week_{len(cpc_axis)}cpc")
-        week_axis = range(len(cpc_axis))
+        # week_axis = range(len(cpc_axis))
         plt.figure()
         plt.scatter(week_axis, cpc_axis)
         plt.savefig(f"figures/week_{len(cpc_axis)}cpc/{count}.png")
@@ -97,7 +108,7 @@ for week in weekly_data:
         plt.scatter(week_axis, ctr_axis)
         plt.savefig(f"figures/week_{len(cpc_axis)}ctr/{count}.png")
         
-        
+    
     break
 
 """
