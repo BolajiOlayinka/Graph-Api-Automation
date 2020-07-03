@@ -9,6 +9,7 @@ import os
 plt.rcParams.update({'figure.max_open_warning': 0})
 import calendar
 import time
+import numpy as np
 
 my_app_id = '2725706687661342'
 my_app_secret = '259338521f39f49cacef7db0aae1ae5d'
@@ -46,83 +47,90 @@ with open('shopify_sales.csv', newline='') as read_shopify_csv:
     shopify_reader=csv.DictReader(read_shopify_csv)
     shopify_reader_list=(list(shopify_reader))
     
-weekly_data = []
+campaign_list = []
 for my_campaigns in campaigns: 
-    name  = my_campaigns['campaign_name'].split("@")[0].lower()
+    # name  = my_campaigns['campaign_name'].split("@")[0].lower()
     # name  = " ".join(my_campaigns['campaign_name'].split()[:2])
     campaign = {}
     try:
         value = [ i.get("value")  for i in my_campaigns['actions'] if i.get("action_type") == "landing_page_view" ][0]
-        campaign['calc_cpc'] = round(int(float(my_campaigns['spend'])) / int(float(value)),2)
-        campaign['impressions'] = my_campaigns['impressions']
-        campaign['campaign_id'] = my_campaigns['campaign_id']
         campaign['campaign_name'] = my_campaigns['campaign_name'].split("@")[0].lower()
-        campaign['spend'] = my_campaigns['spend']
-        campaign['start'] = my_campaigns['date-start']
-        campaign['stop'] = my_campaigns['date-stop']
+        campaign['date_start'] = my_campaigns['date_start']
+        campaign['date_stop'] = time
+        campaign['impressions'] = float(my_campaigns['impressions'])
         campaign['landing_page_view'] = value
-        campaign['current_time'] = time
+        campaign['spend'] = float(my_campaigns['spend'])
+        campaign['calc_cpc'] = round(int(float(my_campaigns['spend'])) / int(float(value)),2)
+        #campaign['current_time'] = time
         campaign['calc_ctr'] = round(int(float(value))/int(float(my_campaigns['impressions'])),4)
-        weekly_data.append(campaign)
+        campaign_list.append(campaign)
     except Exception as e:
         print(e)
-
-for week in weekly_data:
-    product_name=((week)['campaign_name']) + '.csv'
+for each_campaign in campaign_list:
+    product_name=((each_campaign)['campaign_name']) + '.csv'
     for shopify_item in shopify_reader_list:
-        if (week)['campaign_name'] == (shopify_item['product_title']).lower():
-            week['net_quantity']=shopify_item['net_quantity']
-            week['total_sales']=shopify_item['total_sales']       
-        print(week)
+        if (each_campaign)['campaign_name'] == (shopify_item['campaign_name']).lower():
+            each_campaign['net_quantity']=float(shopify_item['net_quantity'])
+            each_campaign['total_sales']=float(shopify_item['total_sales'])      
+            each_campaign['cost']=float(shopify_item['cost']) 
+            each_campaign['capital_roi']=((each_campaign['total_sales']-each_campaign['spend']-each_campaign['cost'])/(each_campaign['spend']+each_campaign['cost'])) * (each_campaign['net_quantity']/each_campaign['spend'])
         with open(product_name, 'a', newline='') as f:
-            fields=list(week.keys())
+            fields=list(each_campaign.keys())
             #print(fields)
             output=csv.DictWriter(f, fieldnames=fields) 
             fileEmpty = os.stat(product_name).st_size == 0
             if fileEmpty:
                 output.writeheader()
-            output.writerow(week)
+            output.writerow(each_campaign)
             #break
         with open(product_name, newline='') as read_csv:
             user_reader=csv.DictReader(read_csv)
             user_reader_list=(list(user_reader))
-            # week_axis=[]
+            print(user_reader_list)
+            # each_campaign_axis=[]
             cpc_axis=[]
             ctr_axis=[]
             purchase_rate_axis=[]
             capital_roi = []
+            stop_date=[]
+            date=[]
             count = 0
             for item in user_reader_list:
-                cpc_axis.append(item['calc_cpc'])
+                cpc_axis.append(float(item['calc_cpc']))
                 result_fb = float(item['landing_page_view'])
                 impression_fb = float(item['impressions'])
                 orders_shopify = float(item['net_quantity'])
-                # week_axis.append(item['current_time'])
-                count+=1
-                #print(result_fb)
-                #print(impreesion_fb)
-                ctr_axis.append(result_fb/impression_fb)
+                stop_date.append(item['date_stop'])
+                ctr_axis.append(float(item['calc_ctr']))
                 purchase_rate_axis.append(orders_shopify/result_fb)
-                capital_roi.append(count)
+                capital_roi.append(float(item['capital_roi']))
+            
+            plt.rc('xtick', labelsize=6)
+            plt.rc('ytick', labelsize=6)
             plt.figure()
             plt.subplot(221)
-            plt.plot(cpc_axis)
+            plt.xticks(rotation=45)
+            plt.plot(cpc_axis,'-o')
             plt.title('Cpc')
             plt.grid(True)    
             plt.subplot(222)
-            plt.plot(ctr_axis)
+            plt.xticks(rotation=45)
+            plt.plot(ctr_axis,'-o')
             plt.title('Ctr')
             plt.grid(True)
             plt.subplot(223)
-            plt.plot(purchase_rate_axis)
+            plt.xticks(rotation=45)
+            plt.plot(purchase_rate_axis,'-o')
             plt.title('Purchase Rate')
             plt.grid(True)
             plt.subplot(224)
-            plt.plot(capital_roi)
+            plt.xticks(rotation=45)
+            plt.plot(capital_roi,'-o')
             plt.title('Capital Roi')
             plt.grid(True)
-            plt.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=0.25,wspace=0.35)
+            plt.subplots_adjust(top=0.92, bottom=0.1, left=0.10, right=0.95, hspace=0.25,wspace=0.2)
             plt.show()
+            
         break
     break
 
