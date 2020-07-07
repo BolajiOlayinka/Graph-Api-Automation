@@ -133,10 +133,11 @@ for shopify_item in shopify_reader_list:
             new_dictionary['total_cost']=float(shopify_item['total_cost'])
         campaign_list.append(new_dictionary)
 
+if os.stat('campaign_list.csv').st_size != 0:
+    os.remove("campaign_list.csv")
 
 for each_campaign in campaign_list:
-    #with open('campaign_list.csv', 'w', newline='') as total_campaign_list:
-    with open('campaign_list.csv', 'w') as total_campaign_list:
+    with open('campaign_list.csv', 'a', newline='') as total_campaign_list:
         campaign_list_header=list(each_campaign.keys())
             #print(fields)
         output=csv.DictWriter(total_campaign_list, fieldnames=campaign_list_header) 
@@ -144,7 +145,7 @@ for each_campaign in campaign_list:
         if fileEmpty:
             output.writeheader()
         output.writerow(each_campaign)
-
+        
 #Create chart and file for each single products first below
 ##################################################
 for each_campaign in campaign_list:

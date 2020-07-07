@@ -9,8 +9,6 @@ import os
 plt.rcParams.update({'figure.max_open_warning': 0})
 
 
-
-
 my_app_id = '2725706687661342'
 my_app_secret = '259338521f39f49cacef7db0aae1ae5d'
 my_access_token = 'EAAmvBArhRR4BADniGjZCgCluOLCRF7TolKU5UriWVmrBH6OUlBypAQgnx0nyPf2wimk3R4bRRQuuLzCbsR82a3DWtYnFMp8ndYTJbdLZBZBHgQQesfC1WjPYeLAYc4T4WoLZBL70olMwpOZBtH7gU7DWclHfDa2xGaMDZAhFOlw4D1SQZCl43F0'
